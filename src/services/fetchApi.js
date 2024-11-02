@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-  const teachers = ref([])
+  // const teachers = ref([])
 
 
   const url = "http://localhost:8080/"
@@ -127,21 +127,21 @@ import axios from 'axios';
     //   }
     // }
 
-    const init = async () => {
-      const {data: professor} = await listProfessores();
-      // const {data: salas} = await listSalas();
-      // const {data: turma} = await listTurmas();
-      // const {data: curso} = await listCurso();
-      // const {data: disciplina} = await listDisciplina();
+    // const init = async () => {
+    //   const {data: professor} = await listProfessores();
+    //   const {data: salas} = await listSalas();
+    //   const {data: turma} = await listTurmas();
+    //   const {data: curso} = await listCurso();
+    //   const {data: disciplina} = await listDisciplina();
 
-      teachers.value = professor;
-      console.log(professor);
-      // console.log(salas);
-      // console.log(turma);
-      // console.log(curso);
-      // console.log(disciplina);
-    }
-    init()
+    //   teachers.value = professor;
+    //   console.log(professor);
+    //   console.log(salas);
+    //   console.log(turma);
+    //   console.log(curso);
+    //   console.log(disciplina);
+    // }
+    // init()
     
-   export {getCurso, cursos, addCurso, teachers, init}
+   export {getCurso, cursos, addCurso}
   

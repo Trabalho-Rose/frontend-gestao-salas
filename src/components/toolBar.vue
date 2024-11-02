@@ -56,17 +56,7 @@
                       <router-link to="">
                         <v-btn class="ma-1">Semestre 2</v-btn>
                       </router-link>
-
-                      <router-link to="">
-                        <v-btn class="ma-1">Semestre 3</v-btn>
-                      </router-link>
-
-                      <router-link to="">
-                        <v-btn class="ma-1">Semestre 4</v-btn>
-                      </router-link>
-                      
-
-                      
+                    
                     </v-list-item>
                   </v-menu>
                 </v-btn>
@@ -74,11 +64,6 @@
               </v-tab>
 
             
-              
-                
-              
-            
-
             <router-link to="/course">
               <v-tab >Cursos</v-tab>
             </router-link>
@@ -93,6 +78,10 @@
 
             <router-link to="/disciplina">
               <v-tab >Disciplinas</v-tab>
+            </router-link>
+
+            <router-link to="/room">
+              <v-tab >Turmas</v-tab>
             </router-link>
 
           </v-tabs> 

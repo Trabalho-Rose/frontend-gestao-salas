@@ -6,23 +6,15 @@ const axiosInstance = axios.create({
     baseURL: url,
 })
 
-const listProfessores = async () => {
+const listProfessor = async () => {
     try{
      const response = await axiosInstance.get("/professor")
-     console.log(response);
-     return response;
+     return response.data;
     }catch(error){
      console.log(error);
+
+     return [];
     }
 }
 
-const initProfessor = async () => {
-    const {data: professor} = await listProfessores(); 
-
-    console.log(professor);
-    
-}
-
-initProfessor()
-
-export {initProfessor}
+export default listProfessor

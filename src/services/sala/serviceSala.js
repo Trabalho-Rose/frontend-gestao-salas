@@ -9,20 +9,13 @@ const axiosInstance = axios.create({
 const listSalas = async () => {
     try{
       const response = await axiosInstance.get("/sala")
-      console.log(response);
-      return response;
+      
+      return response.data;
     }catch(error){
       console.log(error);
+
+      return [];
     }
   }
 
-const initSala = async () => {
-    const {data: sala} = await listSalas(); 
-
-    console.log(sala);
-    
-}
-
-initSala()
-
-export {initSala}
+export default listSalas

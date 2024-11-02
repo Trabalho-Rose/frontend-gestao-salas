@@ -9,21 +9,15 @@ const axiosInstance = axios.create({
 const listCurso = async () => {
     try{
       const response = await axiosInstance.get("/curso");
-      console.log(response);
-      return response;
+      console.log(response.data);
+      return response.data;
       
     }catch(error){
       console.log(error);
+      return [];
     }
 }
 
-const initCurso = async () => {
-    const {data: curso} = await listCurso(); 
 
-    console.log(curso);
-    
-}
 
-initCurso()
-
-export {initCurso}
+export default listCurso

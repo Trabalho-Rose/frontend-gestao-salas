@@ -9,21 +9,16 @@ const axiosInstance = axios.create({
 const listTurmas = async () => {
     try{
       const response = await axiosInstance.get("/turma");
-      console.log(response);
-      return response;
+      console.log(response.data);
+      return response.data;
       
     }catch(error){
       console.log(error);
+      
+      return [];
     }
 }
 
-const initTurma = async () => {
-    const {data: turma} = await listTurmas(); 
 
-    console.log(turma);
-    
-}
 
-initTurma()
-
-export {initTurma}
+export default listTurmas

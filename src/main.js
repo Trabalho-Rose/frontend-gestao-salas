@@ -9,12 +9,14 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
 // Components
-import App from './App.vue'
-import HomeView from './views/HomeView.vue'
-import teacher from './views/teacher.vue'
-import course from './views/course.vue'
-import classroom from './views/classroom.vue'
-import disciplina from './views/disciplina.vue'
+import App from './App.vue';
+import HomeView from './views/HomeView.vue';
+import teacher from './views/teacherView/teacher.vue';
+import course from './views/course.vue';
+import classroom from './views/classroomView/classroom.vue';
+import disciplina from './views/disciplinaView/disciplina.vue';
+import Turma from './views/classView/turma.vue'
+
 
 const vuetify = createVuetify({
   components,
@@ -28,7 +30,8 @@ const routes = [
   {path: '/teacher', component: teacher},
   {path: '/course', component: course },
   {path: '/classroom', component: classroom},
-  {path: '/disciplina', component: disciplina}
+  {path: '/disciplina', component: disciplina},
+  {path: '/room', component: Turma}
 ];
 
 const router = createRouter({
