@@ -10,31 +10,14 @@
         :search="search"
         item-value="id"
       >
-
-      <template v-slot:item="{ item }">
-        <tr>
-          <td>{{ item.id }}</td>
-          <td ><v-btn>{{ item.nome }}</v-btn></td>
-          <td>{{ item.capacidade }}</td>
-          <td>{{ item.situacaoSala }}</td>
-        </tr>
-      </template>
     </v-data-table>
-
-    
-    
   </div>
-
 </template>
 
 
 <script>
 import listSalas from '../../services/sala/serviceSala';
 import { header } from '../../services/sala/const/headers';
-import calendarTemplate from './calendar.vue'
-import { ref, reactive } from 'vue';
-
-// const calendar = reactive({});
 
 
 export default {
@@ -49,15 +32,6 @@ export default {
     this.items = await listSalas();
   },
 }
-
-// const Opencalendar = () => {
-//   calendar = calendarTemplate;
-  
-//   console.log("calendar");
-  
-  
-// }
-
 
 </script>
 

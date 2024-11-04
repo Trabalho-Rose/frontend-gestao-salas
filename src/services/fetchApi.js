@@ -1,8 +1,6 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-  // const teachers = ref([])
-
 
   const url = "http://localhost:8080/"
 
