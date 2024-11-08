@@ -17,5 +17,39 @@ const listDisciplina = async () => {
   }
 }
 
+const addDisciplina = async () => {
+  const name = document.getElementById('name');
+  const workload = document.getElementById('workload')
 
-export default listDisciplina
+  const newDisciplina = {
+    nome: name.value,
+    cargaHoraria: workload.value 
+  };
+
+  try {
+    const response = await axiosInstance.post('/disciplina', newDisciplina)
+    return response.data;
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+const updateDisciplina = async (disciplina) => {
+  try{
+    const response = await axiosInstance.put(`/disciplina/${disciplina.id}`, disciplina);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+const deleteDisciplina = async (id) => {
+  try{
+    const response = await axiosInstance.delete(`/disciplina/${id}`);
+    return response.data; 
+  }catch(error){
+    console.log("Erroa o excluir disciplina: ", error);
+  }
+}
+
+export { listDisciplina, addDisciplina, updateDisciplina, deleteDisciplina }

@@ -1,4 +1,4 @@
-export const headerDisciplina = [
+export const header = [
 
     {
         title: 'Nome da discplina',
