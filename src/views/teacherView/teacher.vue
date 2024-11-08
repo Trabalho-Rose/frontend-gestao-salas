@@ -81,7 +81,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn color="yellow-darken-2" @click="dialog = false">Cancelar</v-btn>
-            <v-btn color="primary" @click="update()">Salvar</v-btn>
+            <v-btn color="primary" @click="update()">Salvar alteração</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

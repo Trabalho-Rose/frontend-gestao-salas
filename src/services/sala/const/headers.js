@@ -1,20 +1,20 @@
 export const header = [
     {
-        text: 'Nome da sala',
+        title: 'Nome da sala',
         
         sortable: true,
-        value: 'nome'
+        key: 'nome'
     },
     {
-        text: 'Capacidade',
+        title: 'Capacidade',
         
         sortable: true,
-        value: 'capacidade'
+        key: 'capacidade'
     },
     {
-        text: 'Situação da sala',
+        title: 'Situação da sala',
         
         sortable: true,
-        value: 'situacaoSala'
+        key: 'situacaoSala'
     },
 ]

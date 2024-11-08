@@ -1,17 +1,17 @@
 export const header = [
     {
-        text: 'ID do curso',
+        title: 'ID do curso',
         sortable: true,
-        value: 'id'
+        key: 'id'
     },
     {
-        text: 'Nome',
+        title: 'Nome',
         sortable: true,
-        value: 'nome'
+        key: 'nome'
     },
     {
-        text: 'Descrição',
+        title: 'Descrição',
         sortable: true,
-        value: 'descricao'
+        key: 'descricao'
     }
 ]

@@ -1,17 +1,17 @@
 export const headerDisciplina = [
 
     {
-        text: 'Nome da discplina',
+        title: 'Nome da discplina',
         align: 'start',
         sortable: true,
-        value: 'nome'
+        key: 'nome'
         // width: '15%'
     },
     {
-        text: 'Carga Horária',
+        title: 'Carga Horária',
         align: 'start',
         sortable: true,
-        value: 'cargaHoraria'
+        key: 'cargaHoraria'
         // width: '15%'
     },
     

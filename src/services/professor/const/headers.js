@@ -1,13 +1,13 @@
 const header = [
     {
-        text: 'Nome do professor',
+        title: 'Nome do professor',
         sortable: true,
-        value: 'nome'
+        key: 'nome'
     },
     {
-        text: 'Dias trabalhados',
+        title: 'Dias trabalhados',
         sortable: true,
-        value: 'diasTrabalhados'
+        key: 'diasTrabalhados'
     },
 ]
 
