@@ -10,13 +10,110 @@
         :search="search"
         item-value="id"
       >
+
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          class=""
+          size="small"
+          color="primary"
+          @click="updateSala(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          color="red-lighten-1"
+          size="small"
+          @click="openDeleteDialog(item.id)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
     </v-data-table>
   </div>
+  
+
+  <v-dialog max-width="500px" v-model="dialog">
+    <template v-slot:activator="{ props: activatorProps }">
+      <v-btn
+        v-bind="activatorProps"
+        width="200px"
+        height="100px"
+        color="primary"
+      >Adicionar</v-btn>
+    </template>
+    <v-card>
+      <v-card-title>Adicionar nova sala</v-card-title>
+      <v-card-text>
+        <v-text-field
+          id="name"
+          clearable
+          label="Nome"
+        ></v-text-field>
+        <v-text-field
+          id="capacity"
+          clearable
+          label="Capacidade"
+        ></v-text-field>
+        <v-text-field
+          id="roomSituation"
+          clearable
+          label="Situação da sala"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="yellow-darken-2" @click="dialog = false"
+            >Cancelar</v-btn
+          >
+          <v-btn color="primary" @click="saveNewSala">Salvar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- atualizar -->
+  <v-dialog max-width="500" v-model="updateDialog">
+      <v-card>
+        <v-card-title>Editar sala</v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="sala.nome"
+            label="Nome"
+            clearable
+          ></v-text-field>
+          <v-text-field
+            v-model="sala.capacidade"
+            label="Capacidade"
+            clearable
+          ></v-text-field>
+          <v-text-field
+            v-model="sala.situacaoSala"
+            label="Situação da sala"
+            clearable
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="yellow-darken-2" @click="updateDialog = false"
+            >Cancelar</v-btn
+          >
+          <v-btn color="primary" @click="update()">Salvar alteração</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+     <!-- delete -->
+     <v-dialog max-width="500px" v-model="deleteDialog">
+      <v-card>
+        <v-card-title>Apagar sala permanentemente?</v-card-title>
+        <v-card-actions>
+          <v-btn color="yellow-darken-2" @click="deleteDialog = false">Cancelar</v-btn>
+          <v-btn color="red" @click="deleteOne()">Apagar</v-btn>
+        </v-card-actions>
+      </v-card>
+     </v-dialog>
 </template>
 
 
 <script>
-import listSalas from '../../services/sala/serviceSala';
+import {listSalas, addSala, updateSala, deleteSala} from '../../services/sala/serviceSala';
 import { header } from '../../services/sala/const/headers';
 
 
@@ -26,11 +123,47 @@ export default {
       items: [],
       header,
       search: '',
+      dialog: false,
+      sala: {},
+      updateDialog: false,
+      deleteDialog: false,
+      saveIdSala: null
     }
   },
   async mounted(){
     this.items = await listSalas();
   },
+
+  methods: {
+    async saveNewSala(){
+      this.sala = {};
+      await addSala(this.sala);
+      this.dialog = false;
+      this.items = await listSalas();
+    },
+
+    updateSala(item){
+      this.sala = { ...item };
+      this.updateDialog = true;
+    },
+
+    async update(){
+      await updateSala(this.sala);
+      this.updateDialog = false;
+      this.items = await listSalas();
+    },
+
+    openDeleteDialog(salaId){
+      this.saveIdSala = salaId;
+      this.deleteDialog = true;
+    },
+
+    async deleteOne(id){
+      this.deleteDialog = false;
+      await deleteSala(this.saveIdSala);
+      this.items = await listSalas();
+    }
+  }
 }
 
 </script>

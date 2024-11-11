@@ -8,5 +8,10 @@ export const header = [
         title: 'Quantidade de alunos',
         sortable: true,
         key: 'qtdAlunos'
+    },
+    {
+        title: 'Ações',
+        sortable: false,
+        key: 'actions'
     }
 ]
