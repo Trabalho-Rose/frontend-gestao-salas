@@ -110,7 +110,7 @@
   </template>
   
   <script >
-import { cursos , addCurso} from '../services/fetchApi'
+//import { cursos , addCurso} from '../services/fetchApi'
 
      export default {
      

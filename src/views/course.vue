@@ -11,41 +11,49 @@
           item-value="id"
         >
 
-        <template v-slot:item="{ item }" >
-          <tr >
-            <td>{{ item.id }}</td>
-            <td>{{ item.nome }}</td>
-            <td
-              class="d-flex justify-space-between align-center"
-            > {{ item.descricao }}
-              <v-btn
-                @click="updateCurso(item)"
-                icon="mdi-pencil"
-                color="primary"
-                size="30"
-              ></v-btn>
-              <v-btn
-                @click="openDeleteDialog(item.id)"
-                icon="mdi-delete"
-                color="red-lighten-1"
-                size="30"
-              ></v-btn>
-            </td>
-          </tr>
+        <template v-slot:top>
+            <v-toolbar
+              flat
+              color="grey-lighten-4"
+            >
+            <v-toolbar-title>Meus cursos</v-toolbar-title>
+            <v-divider
+              class="mx-4"
+              inset
+              vertical
+            ></v-divider>
+            <v-spacer></v-spacer>
+            <v-btn
+              @click="handleAddCurso"
+              width="200px"
+              height="100px"
+              color="primary"
+            >
+              Adicionar
+            </v-btn>
+          </v-toolbar>
+        </template>
+
+        <template v-slot:item.actions=" { item } ">
+          <v-icon
+            size="small"
+            color="primary"
+            @click="updateCurso(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            size="small"
+            color="red-lighten-1"
+            @click="openDeleteDialog(item.id)"
+          >
+            mdi-delete
+          </v-icon>
         </template>
       </v-data-table>
 
       <!-- adicionar novo curso -->
-      <div>
-        <v-btn
-          @click="handleAddCurso"
-          width="200px"
-          height="100px"
-          color="blue"
-        >
-          Adicionar
-        </v-btn>
-      </div>
+      
       <v-dialog max-width="500px" v-model="buttonAddDialog">
         <v-card>
           <v-card-title>Adicionar novo curso</v-card-title>
@@ -168,7 +176,7 @@
     }
 </script>
 
-<style>
+<!-- <style>
   .v-table {
     border-radius: inherit;
     line-height: 1.5;
@@ -176,4 +184,4 @@
     display: inline-block;
     flex-direction: column;
 }
-</style>
+</style> -->

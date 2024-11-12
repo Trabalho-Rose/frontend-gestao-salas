@@ -1,4 +1,4 @@
-const header = [
+export const header = [
     {
         title: 'Nome do professor',
         sortable: true,
@@ -9,6 +9,9 @@ const header = [
         sortable: true,
         key: 'diasTrabalhados'
     },
+    {
+        title: 'Ações',
+        sortable: false,
+        key: 'actions'
+    }
 ]
-
-export default header

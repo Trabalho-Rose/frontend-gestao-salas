@@ -1,46 +1,46 @@
-import { ref } from 'vue';
-import axios from 'axios';
+// import { ref } from 'vue';
+// import axios from 'axios';
 
 
-  const url = "http://localhost:8080/"
+//   const url = "http://localhost:8080/"
 
-  const axiosInstance = axios.create({
-    baseURL: url,
-  })
+//   const axiosInstance = axios.create({
+//     baseURL: url,
+//   })
   
-  const cursos = ref([])
+//   const cursos = ref([])
 
-  async function getCurso(){
-    axios.get('http://localhost:8080/curso')
+//   async function getCurso(){
+//     axios.get('http://localhost:8080/curso')
     
-    .then(res => {
-      cursos.value = res.data
-    })
-    .catch(error => console.log(error))
-  }
-  getCurso() 
+//     .then(res => {
+//       cursos.value = res.data
+//     })
+//     .catch(error => console.log(error))
+//   }
+//   getCurso() 
 
-  function addCurso(){
-    const nomeCurso = document.getElementById("name")
-    const descricao = document.getElementById('descricao')
+//   function addCurso(){
+//     const nomeCurso = document.getElementById("name")
+//     const descricao = document.getElementById('descricao')
 
-    console.log(nomeCurso.value)
-    console.log(descricao.value)
+//     console.log(nomeCurso.value)
+//     console.log(descricao.value)
 
-    const exNewCouse = {
-      id: "1",
-      nome: nomeCurso.value,
-      descricao: descricao.value
-    }
+//     const exNewCouse = {
+//       id: "1",
+//       nome: nomeCurso.value,
+//       descricao: descricao.value
+//     }
 
-    axios.post('http://localhost:8080/curso', exNewCouse)
-    .then(res => {
-      cursos.value = res.data
-      alert("Seu curso foi adicionado.")
-      getCurso()
-    })
-    .catch(error => console.log(error))
-  }
+//     axios.post('http://localhost:8080/curso', exNewCouse)
+//     .then(res => {
+//       cursos.value = res.data
+//       alert("Seu curso foi adicionado.")
+//       getCurso()
+//     })
+//     .catch(error => console.log(error))
+//   }
   //addCurso()
 
 
@@ -141,5 +141,5 @@ import axios from 'axios';
     // }
     // init()
     
-   export {getCurso, cursos, addCurso}
+   //export {getCurso, cursos, addCurso}
   

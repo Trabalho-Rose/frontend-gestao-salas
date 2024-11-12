@@ -13,5 +13,10 @@ export const header = [
         title: 'Descrição',
         sortable: true,
         key: 'descricao'
+    },
+    {
+        title: 'Ações',
+        sortable: false,
+        key: 'actions'
     }
 ]

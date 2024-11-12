@@ -10,30 +10,41 @@
       :search="search"
       item-value="id"
     >
-      <template v-slot:item="{ item }">
-        <tr>
-          <td>{{ item.nome }}</td>
-          <td class="d-flex justify-space-between align-center">
-            {{ item.cargaHoraria }}
-            <v-btn
-              @click="updateDisciplina(item)"
-              icon="mdi-pencil"
-              color="primary"
-              size="30"
-            ></v-btn>
-            <v-btn
-              @click="OpendeleteDialog(item.id)"
-              icon="mdi-delete"
-              color="red-lighten-1"
-              size="30"
-            ></v-btn>
-          </td>
-        </tr>
+      <template v-slot:top>
+        <v-toolbar
+          flat
+          color="cyan-lighten-5"       
+        >
+          <v-toolbar-title>Disciplinas Cesurg</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-btn
+            @click="handleAddDisciplina"
+            width="200px"
+            height="100px"
+            color="primary"
+          >
+            Adicionar
+          </v-btn>
+        </v-toolbar>
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <v-icon size="small" color="primary" @click="updateDisciplina(item)">
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          size="small"
+          color="red-lighten-1"
+          @click="OpendeleteDialog(item.id)"
+        >
+          mdi-delete
+        </v-icon>
       </template>
     </v-data-table>
 
-    <v-dialog max-width="500px" v-model="dialog">
-      <template v-slot:activator="{ props: activatorProps }">
+    <v-dialog max-width="500px" v-model="addDialog">
+      <!-- <template v-slot:activator="{ props: activatorProps }">
         <v-btn
           v-bind="activatorProps"
           width="200px"
@@ -42,7 +53,7 @@
         >
           Adicionar
         </v-btn>
-      </template>
+      </template> -->
       <v-card>
         <v-card-title>Adicionar nova disciplina</v-card-title>
         <v-card-text>
@@ -54,7 +65,7 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="yellow-darken-2" @click="dialog = false"
+          <v-btn color="yellow-darken-2" @click="addDialog = false"
             >Cancelar</v-btn
           >
           <v-btn color="primary" @click="saveNewDisciplina">Salvar</v-btn>
@@ -88,15 +99,17 @@
     </v-dialog>
 
     <!-- delete -->
-     <v-dialog max-width="500px" v-model="deleteDialog">
+    <v-dialog max-width="500px" v-model="deleteDialog">
       <v-card>
         <v-card-title>Apagar disciplina permanentemente?</v-card-title>
         <v-card-actions>
-          <v-btn color="yellow-darken-2" @click="deleteDialog = false">Cancelar</v-btn>
+          <v-btn color="yellow-darken-2" @click="deleteDialog = false"
+            >Cancelar</v-btn
+          >
           <v-btn color="red" @click="deleteOne()">Apagar</v-btn>
         </v-card-actions>
       </v-card>
-     </v-dialog>
+    </v-dialog>
   </div>
 </template>
 
@@ -105,7 +118,7 @@ import {
   listDisciplina,
   addDisciplina,
   updateDisciplina,
-  deleteDisciplina
+  deleteDisciplina,
 } from "../../services/disciplina/serviceDisciplina";
 import { header } from "../../services/disciplina/const/headers";
 
@@ -116,11 +129,10 @@ export default {
       header,
       search: "",
       disciplina: {},
-      dialog: false,
+      addDialog: false,
       updateDialog: false,
       deleteDialog: false,
-      saveIdDisciplina: null
-
+      saveIdDisciplina: null,
     };
   },
 
@@ -129,30 +141,35 @@ export default {
   },
 
   methods: {
-    async saveNewDisciplina() {
+    handleAddDisciplina() {
       this.disciplina = {};
+      this.addDialog = true
+    },
+
+    async saveNewDisciplina() {
+      //this.disciplina = {};
       await addDisciplina(this.disciplina);
-      this.dialog = false;
+      this.addDialog = false;
       this.items = await listDisciplina();
     },
 
-    updateDisciplina(item){
+    updateDisciplina(item) {
       this.disciplina = { ...item };
       this.updateDialog = true;
     },
 
-    async update(){
+    async update() {
       await updateDisciplina(this.disciplina);
       this.updateDialog = false;
       this.items = await listDisciplina();
     },
 
-    OpendeleteDialog(disciplinaId){
+    OpendeleteDialog(disciplinaId) {
       this.saveIdDisciplina = disciplinaId;
-      this.deleteDialog = true
+      this.deleteDialog = true;
     },
 
-    async deleteOne (id) {
+    async deleteOne(id) {
       this.deleteDialog = false;
       await deleteDisciplina(this.saveIdDisciplina);
       this.items = await listDisciplina();
@@ -161,8 +178,7 @@ export default {
 };
 </script>
 
-<style>
-/* estilos customizados */
+<!-- <style>
 .data-table-header {
   font-weight: bold;
 }
@@ -174,4 +190,4 @@ export default {
 
   margin: 10px;
 }
-</style>
+</style> -->
