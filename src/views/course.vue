@@ -119,7 +119,7 @@
 
 <script>
     //import  tab from '../components/tab.vue'
-    import { listCurso, addCurso, updateCurso, deleteCurso } from '../services/curso/serviceCurso';
+    import { listCurso, getItems, addCurso, updateCurso, deleteCurso } from '../services/curso/serviceCurso';
     import { header } from '../services/curso/const/headers';
 
     export default {
@@ -136,7 +136,8 @@
             }
         },
         async mounted() {
-            this.items = await listCurso();   
+          const cursos = await listCurso();
+          this.items = cursos; 
         },
 
         methods: {
@@ -148,7 +149,7 @@
           async saveNewCourse () {
             await addCurso (this.course);
             this.buttonAddDialog = false;
-            this.items = await listCurso();
+            this.items = await getItems();
           },
 
           updateCurso(item){
@@ -159,7 +160,7 @@
           async update(){
             await updateCurso(this.course);
             this.dialogUpdate = false;
-            this.items = await listCurso();
+            this.items = await getItems();
           },
 
           openDeleteDialog(courseId){
@@ -167,10 +168,10 @@
             this.deleteDialog = true;
           },
 
-          async deleteOne (id) {
+          async deleteOne () {
             this.deleteDialog = false;
             await deleteCurso(this.saveIdCurso);
-            this.items = await listCurso();
+            this.items = await getItems();
           },
         }
     }

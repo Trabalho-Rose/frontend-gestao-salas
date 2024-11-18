@@ -15,7 +15,8 @@ import teacher from './views/teacherView/teacher.vue';
 import course from './views/course.vue';
 import classroom from './views/classroomView/classroom.vue';
 import disciplina from './views/disciplinaView/disciplina.vue';
-import Turma from './views/classView/turma.vue'
+import Turma from './views/classView/turma.vue';
+import Sort from './views/sortView/sort.vue'
 
 
 const vuetify = createVuetify({
@@ -31,7 +32,8 @@ const routes = [
   {path: '/course', component: course },
   {path: '/classroom', component: classroom},
   {path: '/disciplina', component: disciplina},
-  {path: '/room', component: Turma}
+  {path: '/room', component: Turma},
+  {path: '/sort', component: Sort}
 ];
 
 const router = createRouter({

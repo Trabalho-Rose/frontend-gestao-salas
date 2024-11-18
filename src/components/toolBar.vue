@@ -84,6 +84,13 @@
               <v-tab >Turmas</v-tab>
             </router-link>
 
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <router-link to="/sort">
+              <v-tab>Sorteio</v-tab>
+            </router-link>
+            
+
           </v-tabs> 
         </template> 
       </v-toolbar>

@@ -6,29 +6,33 @@ const axiosInstance = axios.create({
     baseURL: url,
 })
 
+let items = [];
+
 const listCurso = async () => {
     try{
       const response = await axiosInstance.get("/curso");
-      console.log(response.data);
-      return response.data;
-      
+      items = response.data;
+      return items;
     }catch(error){
       console.log(error);
       return [];
     }
 }
 
-const addCurso = async () => {
-  const getName = document.getElementById('name')
-  const getDescription = document.getElementById('description')
+const getItems = async () => items;
 
-  const newCourse = {
-    nome: getName.value,
-    descricao: getDescription.value
-  }
+const addCurso = async (newCourse) => {
+  // const getName = document.getElementById('name')
+  // const getDescription = document.getElementById('description')
+
+  // const newCourse = {
+  //   nome: getName.value,
+  //   descricao: getDescription.value
+  // }
 
   try{
     const response = await axiosInstance.post("/curso", newCourse);
+    await listCurso();
     return response.data;
   } catch (error) {
     console.log(error);
@@ -38,6 +42,7 @@ const addCurso = async () => {
 const updateCurso = async (course) => {
   try{
     const response = await axiosInstance.put(`/curso/${course.id}`, course);
+    await listCurso();
     return response.data;
   }catch(error){
     console.log(error);
@@ -47,6 +52,7 @@ const updateCurso = async (course) => {
 const deleteCurso = async (id) => {
   try{
     const response = await axiosInstance.delete(`/curso/${id}`);
+    await listCurso();
     return response.data;
   }catch(error){
     console.log("Erro ao excluir curso: ", error);
@@ -54,4 +60,4 @@ const deleteCurso = async (id) => {
   }
 }
 
-export { listCurso, addCurso, updateCurso, deleteCurso }
+export { listCurso, getItems, addCurso, updateCurso, deleteCurso }
