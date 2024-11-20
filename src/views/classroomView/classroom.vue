@@ -115,6 +115,7 @@
 <script>
 import {
   listSalas,
+  getItemsSala,
   addSala,
   updateSala,
   deleteSala,
@@ -135,7 +136,8 @@ export default {
     };
   },
   async mounted() {
-    this.items = await listSalas();
+    const salas = await listSalas();
+    this.items = salas;
   },
 
   methods: {
@@ -145,10 +147,9 @@ export default {
     },
 
     async saveNewSala() {
-      //this.sala = {};
       await addSala(this.sala);
       this.addDialog = false;
-      this.items = await listSalas();
+      this.items = await getItemsSala();
     },
 
     updateSala(item) {
@@ -159,7 +160,7 @@ export default {
     async update() {
       await updateSala(this.sala);
       this.updateDialog = false;
-      this.items = await listSalas();
+      this.items = await getItemsSala();
     },
 
     openDeleteDialog(salaId) {
@@ -170,7 +171,7 @@ export default {
     async deleteOne(id) {
       this.deleteDialog = false;
       await deleteSala(this.saveIdSala);
-      this.items = await listSalas();
+      this.items = await getItemsSala();
     },
   },
 };

@@ -114,6 +114,7 @@
 <script>
 import {
   listTurmas,
+  getItemsTurma,
   addTurma,
   updateTurma,
   deleteTurma,
@@ -135,7 +136,8 @@ export default {
   },
 
   async mounted() {
-    this.items = await listTurmas();
+    const turmas = await listTurmas();
+    this.items = turmas;
   },
 
   methods: {
@@ -148,7 +150,7 @@ export default {
       //this.turma = {};
       await addTurma(this.turma);
       this.addDialog = false;
-      this.items = await listTurmas();
+      this.items = await getItemsTurma();
     },
 
     updateTurma(item) {
@@ -159,7 +161,7 @@ export default {
     async update() {
       await updateTurma(this.turma);
       this.updateDialog = false;
-      this.items = await listTurmas();
+      this.items = await getItemsTurma();
     },
 
     openDeleteDialog(turmaId) {
@@ -167,10 +169,10 @@ export default {
       this.deleteDialog = true;
     },
 
-    async deleteOne(id) {
+    async deleteOne() {
       this.deleteDialog = false;
       await deleteTurma(this.saveIdTurma);
-      this.items = await listTurmas();
+      this.items = await getItemsTurma();
     },
   },
 };

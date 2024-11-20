@@ -142,6 +142,7 @@
 <script>
 import {
   listProfessor,
+  getItemsProfessor,
   addProfessor,
   updateProfessor,
   deleteProfessor,
@@ -163,7 +164,8 @@ export default {
     };
   },
   async mounted() {
-    this.items = await listProfessor();
+    const professores = await listProfessor();
+    this.items = professores;
   },
   methods: {
     updateTeacher(item) {
@@ -179,13 +181,13 @@ export default {
     async saveNewProfessor() {
       await addProfessor(this.teacher);
       this.buttonAddDialog = false;
-      this.items = await listProfessor();
+      this.items = await getItemsProfessor();
     },
 
     async update() {
       await updateProfessor(this.teacher);
       this.dialog = false;
-      this.items = await listProfessor();
+      this.items = await getItemsProfessor();
     },
 
     openDeleteDialog(teacherId) {
@@ -196,7 +198,7 @@ export default {
     async deleteOne(id) {
       this.deleteDialog = false;
       await deleteProfessor(this.saveIDTeacher);
-      this.items = await listProfessor();
+      this.items = await getItemsProfessor();
     },
   },
 };

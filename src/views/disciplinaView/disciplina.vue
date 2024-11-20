@@ -116,6 +116,7 @@
 <script>
 import {
   listDisciplina,
+  getItemsDisciplina,
   addDisciplina,
   updateDisciplina,
   deleteDisciplina,
@@ -137,7 +138,8 @@ export default {
   },
 
   async mounted() {
-    this.items = await listDisciplina();
+    const disciplinas = await listDisciplina();
+    this.items = disciplinas;
   },
 
   methods: {
@@ -150,7 +152,7 @@ export default {
       //this.disciplina = {};
       await addDisciplina(this.disciplina);
       this.addDialog = false;
-      this.items = await listDisciplina();
+      this.items = await getItemsDisciplina();
     },
 
     updateDisciplina(item) {
@@ -161,7 +163,7 @@ export default {
     async update() {
       await updateDisciplina(this.disciplina);
       this.updateDialog = false;
-      this.items = await listDisciplina();
+      this.items = await getItemsDisciplina();
     },
 
     OpendeleteDialog(disciplinaId) {
@@ -169,10 +171,10 @@ export default {
       this.deleteDialog = true;
     },
 
-    async deleteOne(id) {
+    async deleteOne() {
       this.deleteDialog = false;
       await deleteDisciplina(this.saveIdDisciplina);
-      this.items = await listDisciplina();
+      this.items = await getItemsDisciplina();
     },
   },
 };

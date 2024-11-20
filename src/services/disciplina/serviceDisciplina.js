@@ -6,28 +6,33 @@ const axiosInstance = axios.create({
     baseURL: url,
 })
 
+let items = [];
+
 const listDisciplina = async () => {
   try{
     const response = await axiosInstance.get("/disciplina");
-    return response.data;
+    items = response.data;
+    return items;
   } catch (error) {
     console.log(error);
-    
     return [];
   }
 }
 
-const addDisciplina = async () => {
-  const name = document.getElementById('name');
-  const workload = document.getElementById('workload')
+const getItemsDisciplina = async () => items;
 
-  const newDisciplina = {
-    nome: name.value,
-    cargaHoraria: workload.value 
-  };
+const addDisciplina = async (newDisciplina) => {
+  // const name = document.getElementById('name');
+  // const workload = document.getElementById('workload')
+
+  // const newDisciplina = {
+  //   nome: name.value,
+  //   cargaHoraria: workload.value 
+  // };
 
   try {
-    const response = await axiosInstance.post('/disciplina', newDisciplina)
+    const response = await axiosInstance.post('/disciplina', newDisciplina);
+    await listDisciplina();
     return response.data;
   } catch(error) {
     console.log(error);
@@ -37,6 +42,7 @@ const addDisciplina = async () => {
 const updateDisciplina = async (disciplina) => {
   try{
     const response = await axiosInstance.put(`/disciplina/${disciplina.id}`, disciplina);
+    await listDisciplina();
     return response.data;
   }catch(error){
     console.log(error);
@@ -46,10 +52,11 @@ const updateDisciplina = async (disciplina) => {
 const deleteDisciplina = async (id) => {
   try{
     const response = await axiosInstance.delete(`/disciplina/${id}`);
+    await listDisciplina();
     return response.data; 
   }catch(error){
     console.log("Erroa o excluir disciplina: ", error);
   }
 }
 
-export { listDisciplina, addDisciplina, updateDisciplina, deleteDisciplina }
+export { listDisciplina, getItemsDisciplina, addDisciplina, updateDisciplina, deleteDisciplina }
