@@ -14,7 +14,7 @@ const listSalas = async () => {
     items = response.data;
     return items;
   }catch(error){
-    console.log(error);
+    console.log('Erro ao listar salas', error);
     return [];
   }
 }
@@ -61,6 +61,14 @@ const deleteSala = async (id) => {
   }
 }
 
-cosnt 
+const vincularTurma = async (salaId, turmaId) => {
+  try {
+    const response = await axiosInstance.post(`/sala/${salaId}/turma/${turmaId}`);
+    await listSalas();
+    return response.data;
+  } catch (error) {
+    console.log('Erro ao vicular turma', error);
+  }
+}
 
-export { listSalas, getItemsSala, addSala, updateSala, deleteSala }
+export { listSalas, getItemsSala, addSala, updateSala, deleteSala, vincularTurma }
