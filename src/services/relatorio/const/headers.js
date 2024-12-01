@@ -1,10 +1,5 @@
 export const header = [
     {
-        title: 'ID',
-        sortable: true,
-        key: 'id'
-    },
-    {
         title: 'Curso',
         sortable: true,
         key: 'id_curso'
@@ -28,5 +23,10 @@ export const header = [
         title: 'Turma',
         sortable: true,
         key: 'id_turma'
+    },
+    {
+        title: 'Ações',
+        sortable: true,
+        key: 'actions'
     }
 ]

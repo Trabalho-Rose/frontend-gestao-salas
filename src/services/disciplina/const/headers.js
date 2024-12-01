@@ -2,15 +2,23 @@ export const header = [
 
     {
         title: 'Nome da discplina',
-        //align: 'start',
         sortable: true,
         key: 'nome'
     },
     {
         title: 'Carga Horária',
-        //align: 'start',
         sortable: true,
         key: 'cargaHoraria'
+    },
+    {
+        title: 'ID do professor',
+        sortable: true,
+        key: 'professor_id'
+    },
+    {
+        title: 'ID do curso',
+        sortable: true,
+        key: 'curso_id'
     },
     {
         title: 'Ações',

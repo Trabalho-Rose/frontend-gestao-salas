@@ -42,7 +42,11 @@ const addCurso = async (newCourse) => {
 const updateCurso = async (course) => {
   try{
     const response = await axiosInstance.put(`/curso/${course.id}`, course);
+    console.log(response.data);
+    
     await listCurso();
+    console.log(items);
+    
     return response.data;
   }catch(error){
     console.log(error);

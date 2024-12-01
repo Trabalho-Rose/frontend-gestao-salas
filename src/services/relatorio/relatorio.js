@@ -11,18 +11,20 @@ let items = [];
 const listSorteio = async () => {
   try{
     const response = await axiosInstance.get("/sorteio");
-    console.log(response.data);
-    console.log(items);
     items = response.data;
+
+    console.log('sorteios: ',items);
     return items;
     
   }catch(error){
-    console.log(error);
+    console.log('Erro ao buscar dados da api: ', error);
     return [];
   }
 }
+listSorteio()
 
 const getItemsSorteio = async () => items;
+
 
 const addSorteio = async (newItem) => {
   try {
@@ -57,10 +59,10 @@ const deleteSorteio = async (id) => {
 const deleteAllSorteio = async () => {
   try {
     const response = await axiosInstance.delete(`/sorteio`);
-  
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
+    throw error;
   }
 }
 

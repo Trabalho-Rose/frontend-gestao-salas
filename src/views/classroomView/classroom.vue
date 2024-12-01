@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-data-table
-      class="data-table-header"
+      class="data-table-header ma-5 border-md rounded-lg "
       dense
       height="76vh"
       fixed-header
@@ -13,7 +13,7 @@
       <template v-slot:top>
         <v-toolbar
           flat
-          color="cyan-lighten-5"
+          color="grey-lighten-4"
         >
           <v-toolbar-title>Salas Cesurg</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
@@ -57,8 +57,8 @@
     <v-card>
       <v-card-title>Adicionar nova sala</v-card-title>
       <v-card-text>
-        <v-text-field id="name" clearable label="Nome"></v-text-field>
-        <v-text-field id="capacity" clearable label="Capacidade"></v-text-field>
+        <v-text-field clearable label="Nome"></v-text-field>
+        <v-text-field clearable label="Capacidade"></v-text-field>
         <v-text-field
           id="roomSituation"
           clearable
@@ -161,6 +161,7 @@ export default {
       await updateSala(this.sala);
       this.updateDialog = false;
       this.items = await getItemsSala();
+      
     },
 
     openDeleteDialog(salaId) {

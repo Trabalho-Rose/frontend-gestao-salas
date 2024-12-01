@@ -13,9 +13,9 @@
       <template v-slot:top>
         <v-toolbar
           flat
-          color="cyan-lighten-5"
+          color="grey-lighten-4"
         >
-          <v-toolbar-title>Doscentes da faculdade</v-toolbar-title>
+          <v-toolbar-title>Docentes da faculdade</v-toolbar-title>
           <v-divider class="mx-4" inset vertical ></v-divider>
           <v-spacer></v-spacer>
           <v-btn

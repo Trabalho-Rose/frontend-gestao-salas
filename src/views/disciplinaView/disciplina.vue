@@ -13,7 +13,7 @@
       <template v-slot:top>
         <v-toolbar
           flat
-          color="cyan-lighten-5"       
+          color="grey-lighten-4"     
         >
           <v-toolbar-title>Disciplinas Cesurg</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>

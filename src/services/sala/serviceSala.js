@@ -1,4 +1,5 @@
 import axios from "axios";
+import snackBar from "../../components/snackBar.vue";
 
 const url = "http://localhost:8080/"
 
@@ -12,6 +13,8 @@ const listSalas = async () => {
   try{
     const response = await axiosInstance.get("/sala");
     items = response.data;
+    console.log(items);
+    
     return items;
   }catch(error){
     console.log('Erro ao listar salas', error);

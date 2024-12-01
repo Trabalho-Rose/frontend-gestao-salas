@@ -12,7 +12,7 @@ export const header = [
     {
         title: 'Situação da sala',
         sortable: true,
-        key: 'situacaoSala'
+        key: 'situacaoSala_id'
     },
     {
         title: 'Ações',

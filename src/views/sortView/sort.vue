@@ -52,21 +52,21 @@
         </v-card-text>
         <v-spacer></v-spacer>
         <v-card-actions>
-          <v-btn color="grey" @click="limparSelecoes">Cancelar</v-btn>
-          <v-btn color="primary" @click="salvarSelecao">Salvar</v-btn>
+          <v-btn color="grey" @click="limparSelecoes">Limpar</v-btn>
+          <v-btn color="primary" @click="saveAllItems">Salvar</v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
     <v-col>
         <div>
           <v-data-table
-            class="data-table-header"
+            class="data-table-header mt-10"
             max-width="500px"
             dense
             height="76vh"
             fixed-header
             :headers="header"
-            :items="newDiaryChoice"
+            :items="allItems"
             :search="search"
             item-value="id"
 
@@ -93,17 +93,104 @@
           </template>
 
             <template v-slot:top>
-              <v-toolbar flat color="secondary">
+              <v-toolbar
+                flat
+                color="grey-lighten-4"
+              >
                 <v-toolbar-title>Lista Salas</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <v-btn
                 >
-    
+                  excel
                 </v-btn>
+                <v-icon
+                  color="red"
+                  @click="handleDeleteAllDialog"
+                >mdi-delete</v-icon>
               </v-toolbar>
             </template>
+
+            <template v-slot:item.actions="{ item }">
+              <!-- <v-icon class="" size="small" color="primary" @click="updateSorteio(item)">
+                mdi-pencil
+              </v-icon> -->
+              <v-icon
+                color="red-lighten-1"
+                size="small"
+                @click="openDeleteDialog(item.id)"
+              >
+                mdi-delete
+              </v-icon>
+            </template>
           </v-data-table>
+
+          <!-- <v-dialog max-width="500px" v-model="updateDialog">
+            <v-card>
+              <v-card-title>Editar item</v-card-title>
+              <v-card-text>
+                <v-text-field
+                  label="Curso"
+                >
+
+                </v-text-field>
+                <v-text-field
+                  label="Professor"
+                >
+
+                </v-text-field>
+                <v-text-field
+                  label="Disciplina"
+                >
+
+                </v-text-field>
+                <v-text-field
+                  label="Sala"
+                >
+
+                </v-text-field>
+                <v-text-field
+                  label="Turma"
+                >
+
+                </v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="grey-darker-2" @click="updateDialog = false"
+                  >Cancelar</v-btn
+                >
+                <v-btn color="primary" @click="update()">Salvar alteração</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog> -->
+
+          <!-- delete -->
+          <v-dialog max-width="700px" v-model="deleteDialog">
+            <v-card>
+              <v-card-title>Apagar item permanentemente?</v-card-title>
+              <v-card-actions>
+                <v-btn color="grey-darken-2" @click="deleteDialog = false"
+                  >Cancelar</v-btn
+                >
+                <v-btn color="red" @click="deleteOne()">Apagar</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <!-- delete all -->
+          <v-dialog max-width="700px" v-model="deleteAllDialog">
+            <v-card>
+              <v-card-title>Ao prosseguir você excluirá todos os itens da tabela</v-card-title>
+              <v-card-text>Deseja prosseguir?</v-card-text>
+              <v-card-actions>
+                <v-btn color="grey-darken-2" @click="deleteAllDialog = false"
+                  >Cancelar</v-btn
+                >
+                <v-btn color="red" @click="deleteAll()">Apagar todos</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
         </div>
     </v-col>
   </v-row>
@@ -117,7 +204,7 @@ import { getItemsSala } from "../../services/sala/serviceSala";
 import { getItemsTurma } from "../../services/turma/serviceTurma";
 
 import { header } from '../../services/relatorio/const/headers'
-import { getItemsSorteio } from '../../services/relatorio/relatorio'
+import { getItemsSorteio, addSorteio, updateSorteio, deleteSorteio, deleteAllSorteio } from '../../services/relatorio/relatorio'
  
 export default {
   data() {
@@ -135,19 +222,24 @@ export default {
       selectedSala: null,
       selectedTurma: null,
       newDiaryChoice: [],
+      allItems: [],
       currentSelection: {},
-      nextId: 1
+      nextId: 1,
+      //updateDialog: false,
+      //sort: {}
+      deleteDialog: false,
+      saveIdToDelete: null,
+      deleteAllDialog: false,
     };
   },
 
   async mounted() {
     try {
+      const saveAllItems = await getItemsSorteio();
+      this.allItems = saveAllItems;
+      
       const itemCurso = await getItems();
       this.itemsCurso = itemCurso;
-      // this.filteredItems = this.items.filter( function (item) {
-      //    return item.nome == 'ADM'
-      // });
-      // console.log(this.filteredItems);
       
       const itemDisciplina = await getItemsDisciplina();
       this.itemsDisciplina = itemDisciplina;
@@ -162,7 +254,7 @@ export default {
       this.itemsTurmas = itemTurma;
     } catch (error) {
       console.error("Erro ao carregar itens:", error);
-    }
+    };
   },
 
   watch: {
@@ -215,18 +307,15 @@ export default {
 
 
   methods: {
-    salvarSelecao() {
-      // Verifica se há alguma seleção atual
-      if (Object.keys(this.currentSelection).length > 0) {
-        // Adiciona um ID único para cada entrada
-        const novaSelecao = {
+    async saveAllItems () {
+      if(Object.keys(this.currentSelection).length > 0){
+        const newChoices = {
           id: this.nextId++,
           ...this.currentSelection
         };
-        
-        // Adiciona a nova seleção ao array
-        this.newDiaryChoice.push(novaSelecao);
-        
+        await addSorteio(newChoices);
+        this.allItems = await getItemsSorteio();
+
         this.limparSelecoes();
       }
     },
@@ -238,6 +327,46 @@ export default {
       this.selectedSala = null;
       this.selectedTurma = null;
       this.currentSelection = {};
+    },
+
+    // updateSorteio(item){
+    //   this.currentSelection = { ...item }
+    //   this.updateDialog = true;
+    // },
+
+    // async update() {
+    //   await updateSorteio(this.sort);
+    //   this.updateDialog = false;
+    //   this.allItems = await getItemsSorteio();
+    // },
+    
+    openDeleteDialog (id) {
+      this.saveIdToDelete = id;
+      this.deleteDialog = true
+    },
+
+    async deleteOne() {
+      try{
+        this.deleteDialog = false;
+        await deleteSorteio(this.saveIdToDelete);
+        this.allItems = await getItemsSorteio();
+      } catch (error) {
+        console.log('Erro ao deletar item: ', error); 
+      }
+    },
+
+    handleDeleteAllDialog () {
+      this.deleteAllDialog = true;
+    },
+
+    async deleteAll () {
+      try{
+        this.deleteAllDialog = false;
+        await deleteAllSorteio();
+      } catch (error) {
+        console.log('Erro ao excluir todos registros: ', error);
+        
+      }
     }
   }
 };
