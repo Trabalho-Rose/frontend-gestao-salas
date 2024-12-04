@@ -1,5 +1,12 @@
 <template>
     <div>
+      <v-snackbar
+        v-model="showSnackbar"
+        color="success"
+      >
+        {{ text }}
+      </v-snackbar>
+
         <v-data-table
           class="data-table-header"
           dense
@@ -30,6 +37,14 @@
               color="primary"
             >
               Adicionar
+            </v-btn>
+            <v-btn
+              @click="openSnackbar"
+              width="200px"
+              height="100px"
+              color="primary"
+            >
+              snack
             </v-btn>
           </v-toolbar>
         </template>
@@ -117,12 +132,39 @@
     </div>
   </template>
 
+<!-- <script setup>
+import { useSnackbar } from "vue3-snackbar";
+const snackbar = useSnackbar();
+snackbar.add({
+    type: 'success',
+    text: 'This is a snackbar message'
+})
+</script> -->
+
 <script>
     //import  tab from '../components/tab.vue'
     import { listCurso, getItems, addCurso, updateCurso, deleteCurso } from '../services/curso/serviceCurso';
     import { header } from '../services/curso/const/headers';
+    import { EventBus, ACTIONS } from '../global/eventBus'
+    import { showSnackbar } from '../global/index'
+    //import { useSnackbar } from 'vue3-snackbar';
+
 
     export default {
+  //     setup() {
+  //   const snackbar = useSnackbar();
+
+  //   const showSnackbar = () => {
+  //     snackbar.add({
+  //       type: 'success',
+  //       text: 'Mensagem do Snackbar!',
+  //       title: 'some',
+  //       duration: 3
+  //     });
+  //   };
+
+  //   return { showSnackbar };
+  // },
         data () {
             return {
                 header,
@@ -132,7 +174,9 @@
                 buttonAddDialog: false,
                 dialogUpdate: false,
                 deleteDialog: false,
-                saveIdCurso: null
+                saveIdCurso: null,
+                showSnackbar: false,
+                text: '',
             }
         },
         async mounted() {
@@ -148,8 +192,10 @@
 
           async saveNewCourse () {
             await addCurso (this.course);
+            this.showSnackbar = true
             this.buttonAddDialog = false;
             this.items = await getItems();
+
           },
 
           updateCurso(item){
@@ -159,8 +205,15 @@
 
           async update(){
             await updateCurso(this.course);
+
             this.dialogUpdate = false;
             this.items = await getItems();
+            this.text = 'Curso atualizado com sucesso!';
+            this.showSnackbar = true;
+
+            setTimeout(() => {
+              this.showSnackbar = false
+            }, 4000);
           },
 
           openDeleteDialog(courseId){
@@ -173,7 +226,16 @@
             await deleteCurso(this.saveIdCurso);
             this.items = await getItems();
           },
-        }
+
+          openSnackbar() {
+            this.text = 'Some message';
+            this.showSnackbar = true;
+
+            setTimeout(() => {
+              this.showSnackbar = false
+            }, 4000);
+        },
+      }
     }
 </script>
 
@@ -186,3 +248,11 @@
     flex-direction: column;
 }
 </style> -->
+
+<style>
+
+  a, button{
+    color: inherit !important;
+  }
+
+</style>

@@ -43,6 +43,11 @@ const updateCurso = async (course) => {
   try{
     const response = await axiosInstance.put(`/curso/${course.id}`, course);
     console.log(response.data);
+    if(response.data === 200){
+      return response.data;
+    } else {
+      throw new Error('Erro ao atualizar curso')
+    }
     
     await listCurso();
     console.log(items);

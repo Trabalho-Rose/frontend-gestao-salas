@@ -110,9 +110,12 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  
 </template>
 
 <script>
+
 import {
   listSalas,
   getItemsSala,
@@ -122,9 +125,13 @@ import {
 } from "../../services/sala/serviceSala";
 import { header } from "../../services/sala/const/headers";
 
+
+
 export default {
+
   data() {
     return {
+      
       items: [],
       header,
       search: "",

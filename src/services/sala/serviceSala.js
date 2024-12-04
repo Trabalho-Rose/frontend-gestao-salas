@@ -1,5 +1,4 @@
 import axios from "axios";
-import snackBar from "../../components/snackBar.vue";
 
 const url = "http://localhost:8080/"
 

@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import '@mdi/font/css/materialdesignicons.css'  // Import MDI icons
+import { SnackbarService, Vue3Snackbar } from 'vue3-snackbar';
+//import "vue3-snackbar/dist/style.css";
 
 // Vuetify
 import 'vuetify/styles'
@@ -41,6 +43,6 @@ const router = createRouter({
   routes
 });
 
-createApp(App).use(vuetify).use(router).mount('#app')
+createApp(App).use(vuetify).use(router).use(SnackbarService).component('vue3-snackbar', Vue3Snackbar).mount('#app')
 
 
