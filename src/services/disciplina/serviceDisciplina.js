@@ -8,6 +8,10 @@ const axiosInstance = axios.create({
 
 let items = [];
 
+export const apiState = {
+  success: false
+}
+
 const listDisciplina = async () => {
   try{
     const response = await axiosInstance.get("/disciplina");
@@ -32,9 +36,16 @@ const addDisciplina = async (newDisciplina) => {
 
   try {
     const response = await axiosInstance.post('/disciplina', newDisciplina);
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listDisciplina();
+      return response.data;
+    } else {
+      apiState.success = false;
+    }
     await listDisciplina();
-    return response.data;
   } catch(error) {
+    apiState.success = false
     console.log(error);
   }
 }
@@ -42,9 +53,17 @@ const addDisciplina = async (newDisciplina) => {
 const updateDisciplina = async (disciplina) => {
   try{
     const response = await axiosInstance.put(`/disciplina/${disciplina.id}`, disciplina);
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listDisciplina();
+      return response.data;
+      
+    } else {
+      apiState.success = false;
+    }
     await listDisciplina();
-    return response.data;
   }catch(error){
+    apiState.success = false
     console.log(error);
   }
 }
@@ -52,9 +71,16 @@ const updateDisciplina = async (disciplina) => {
 const deleteDisciplina = async (id) => {
   try{
     const response = await axiosInstance.delete(`/disciplina/${id}`);
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listDisciplina();
+      return response.data;
+    } else {
+      apiState.success = false;
+    }
     await listDisciplina();
-    return response.data; 
   }catch(error){
+    apiState.success = false
     console.log("Erroa o excluir disciplina: ", error);
   }
 }

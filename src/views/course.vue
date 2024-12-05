@@ -2,7 +2,7 @@
     <div>
       <v-snackbar
         v-model="showSnackbar"
-        color="success"
+        :color="snackBarColor"
       >
         {{ text }}
       </v-snackbar>
@@ -37,14 +37,6 @@
               color="primary"
             >
               Adicionar
-            </v-btn>
-            <v-btn
-              @click="openSnackbar"
-              width="200px"
-              height="100px"
-              color="primary"
-            >
-              snack
             </v-btn>
           </v-toolbar>
         </template>
@@ -143,28 +135,13 @@ snackbar.add({
 
 <script>
     //import  tab from '../components/tab.vue'
-    import { listCurso, getItems, addCurso, updateCurso, deleteCurso } from '../services/curso/serviceCurso';
+    import { listCurso, getItems, addCurso, updateCurso, deleteCurso, apiState } from '../services/curso/serviceCurso';
     import { header } from '../services/curso/const/headers';
     import { EventBus, ACTIONS } from '../global/eventBus'
     import { showSnackbar } from '../global/index'
-    //import { useSnackbar } from 'vue3-snackbar';
 
 
     export default {
-  //     setup() {
-  //   const snackbar = useSnackbar();
-
-  //   const showSnackbar = () => {
-  //     snackbar.add({
-  //       type: 'success',
-  //       text: 'Mensagem do Snackbar!',
-  //       title: 'some',
-  //       duration: 3
-  //     });
-  //   };
-
-  //   return { showSnackbar };
-  // },
         data () {
             return {
                 header,
@@ -177,6 +154,7 @@ snackbar.add({
                 saveIdCurso: null,
                 showSnackbar: false,
                 text: '',
+                snackBarColor: 'success'
             }
         },
         async mounted() {
@@ -191,11 +169,30 @@ snackbar.add({
           },
 
           async saveNewCourse () {
-            await addCurso (this.course);
-            this.showSnackbar = true
-            this.buttonAddDialog = false;
-            this.items = await getItems();
-
+            try {
+              await addCurso (this.course);
+              if (apiState.success === true){
+                this.snackBarColor = 'success';
+                this.text = 'Curso adicionado com sucesso!';
+                this.showSnackbar = true;
+                this.items = await getItems();
+                setTimeout(() => {
+                  this.showSnackbar = false
+                }, 2000);
+              } else {
+                  this.snackBarColor = 'error';
+                  this.text = 'Erro ao adicionar novo curso.';
+                  this.showSnackbar = true;
+                  setTimeout(() => {
+                    this.showSnackbar = false
+                  }, 4000);
+              }
+            } catch (error) {
+              console.log(error);
+            } finally {
+              this.buttonAddDialog = false;
+              this.items = await getItems();
+            }
           },
 
           updateCurso(item){
@@ -204,16 +201,30 @@ snackbar.add({
           },
 
           async update(){
-            await updateCurso(this.course);
-
-            this.dialogUpdate = false;
-            this.items = await getItems();
-            this.text = 'Curso atualizado com sucesso!';
-            this.showSnackbar = true;
-
-            setTimeout(() => {
-              this.showSnackbar = false
-            }, 4000);
+            try {
+              await updateCurso(this.course);
+              if (apiState.success === true) {
+                this.snackBarColor = 'success';
+                this.text = 'Curso atualizado com sucesso!';
+                this.showSnackbar = true;
+                this.items = await listCurso();
+                setTimeout(() => {
+                  this.showSnackbar = false
+                }, 2000);
+              } else {
+                this.snackBarColor = 'error';
+                this.text = `Erro ao atualizar item`;
+                this.showSnackbar = true;
+                setTimeout(() => {
+                  this.showSnackbar = false
+                }, 4000);
+              }
+            } catch (error) {
+              console.log(error);
+            } finally {
+              this.dialogUpdate = false;
+              this.items = await getItems();
+            }
           },
 
           openDeleteDialog(courseId){
@@ -222,19 +233,40 @@ snackbar.add({
           },
 
           async deleteOne () {
-            this.deleteDialog = false;
-            await deleteCurso(this.saveIdCurso);
-            this.items = await getItems();
+            try {
+              this.deleteDialog = false;
+              await deleteCurso(this.saveIdCurso);
+              if (apiState.success === true) {
+                this.snackBarColor = 'success';
+                this.text = 'Curso removido com sucesso!';
+                this.showSnackbar = true;
+                this.items = await getItems();
+                setTimeout(() => {
+                  this.showSnackbar = false
+                }, 2000);
+              } else {
+                this.snackBarColor = 'error';
+                this.text = `Erro ao remover curso`;
+                this.showSnackbar = true;
+                setTimeout(() => {
+                  this.showSnackbar = false
+                }, 4000);
+              }
+            } catch (error) {
+              console.log(error);
+            } finally {
+              this.items = await getItems();
+            }
           },
 
-          openSnackbar() {
-            this.text = 'Some message';
-            this.showSnackbar = true;
+        //   openSnackbar() {
+        //     this.text = 'Some message';
+        //     this.showSnackbar = true;
 
-            setTimeout(() => {
-              this.showSnackbar = false
-            }, 4000);
-        },
+        //     setTimeout(() => {
+        //       this.showSnackbar = false
+        //     }, 4000);
+        // },
       }
     }
 </script>

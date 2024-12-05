@@ -8,6 +8,10 @@ const axiosInstance = axios.create({
 
 let items = [];
 
+export const apiState = {
+  success: false
+}
+
 const listSorteio = async () => {
   try{
     const response = await axiosInstance.get("/sorteio");
@@ -29,9 +33,15 @@ const getItemsSorteio = async () => items;
 const addSorteio = async (newItem) => {
   try {
     const response = await axiosInstance.post('/sorteio', newItem);
-    await listSorteio();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSorteio();
+      return response.data
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false
     console.log(error);
   }
 }
@@ -39,9 +49,15 @@ const addSorteio = async (newItem) => {
 const updateSorteio = async (situacao) => {
   try {
     const response = await axiosInstance.put(`/sorteio/${situacao.id}`, situacao);
-    await listSorteio();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSorteio();
+      return response.data
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false;
     console.log(error);
   }
 }
@@ -49,9 +65,17 @@ const updateSorteio = async (situacao) => {
 const deleteSorteio = async (id) => {
   try {
     const response = await axiosInstance.delete(`/sorteio/${id}`);
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSorteio();
+      return response.data
+    } else {
+      apiState.success = false
+    }
     await listSorteio();
-    return response.data;
+    
   } catch (error) {
+    apiState.success = false;
     console.log(error);
   }
 }
@@ -59,8 +83,15 @@ const deleteSorteio = async (id) => {
 const deleteAllSorteio = async () => {
   try {
     const response = await axiosInstance.delete(`/sorteio`);
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSorteio();
+      return response.data
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false;
     console.log(error.response);
     throw error;
   }

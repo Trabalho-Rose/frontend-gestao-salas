@@ -1,5 +1,11 @@
 <template>
   <div>
+    <v-snackbar
+        v-model="showSnackbar"
+        :color="snackBarColor"
+      >
+        {{ text }}
+      </v-snackbar>
     <v-data-table
       class="data-table-header"
       dense
@@ -146,8 +152,11 @@ import {
   addProfessor,
   updateProfessor,
   deleteProfessor,
+  apiState
 } from "../../services/professor/serviceProfessor";
 import { header } from "../../services/professor/const/headers";
+import { EventBus, ACTIONS } from '../../global/eventBus'
+import { showSnackbar } from '../../global/index'
 
 export default {
   data() {
@@ -161,6 +170,9 @@ export default {
       deleteDialog: false,
       teacher: {},
       saveIDTeacher: null,
+      showSnackbar: false,
+      text: '',
+      snackBarColor: 'success'
     };
   },
   async mounted() {
@@ -179,15 +191,57 @@ export default {
     },
 
     async saveNewProfessor() {
-      await addProfessor(this.teacher);
-      this.buttonAddDialog = false;
-      this.items = await getItemsProfessor();
+      try {
+        await addProfessor(this.teacher);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Professor adicionado com sucesso!'
+          this.showSnackbar = true;
+          this.items = getItemsProfessor();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000);
+        } else {
+          this.snackBarColor = 'error',
+          this.text = 'Erro ao cadastrar novo professor.'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.buttonAddDialog = false;
+        this.items = await getItemsProfessor();
+      }
     },
 
     async update() {
-      await updateProfessor(this.teacher);
-      this.dialog = false;
-      this.items = await getItemsProfessor();
+      try {
+        await updateProfessor(this.teacher);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Professor atualizado com sucesso!';
+          this.showSnackbar = true;
+          this.items = await getItemsProfessor();
+          setTimeout(() => {
+            this.showSnackbar = false;
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error'
+          this.text = 'Erro ao atualizar item.'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.dialog = false;
+        this.items = await getItemsProfessor();
+      }
     },
 
     openDeleteDialog(teacherId) {
@@ -196,9 +250,30 @@ export default {
     },
 
     async deleteOne(id) {
-      this.deleteDialog = false;
-      await deleteProfessor(this.saveIDTeacher);
-      this.items = await getItemsProfessor();
+      try {
+        this.deleteDialog = false;
+        await deleteProfessor(this.saveIDTeacher);
+        if(apiState.success === true) {
+          this.snackBarColor = 'success';
+          this.text = 'Professor deletado com sucesso!'
+          this.showSnackbar = true;
+          this.items = await getItemsProfessor()
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao remover item';
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false;
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.items = await getItemsProfessor();
+      }
     },
   },
 };

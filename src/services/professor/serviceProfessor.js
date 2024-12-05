@@ -8,6 +8,10 @@ const axiosInstance = axios.create({
 
 let items = [];
 
+export const apiState = {
+    success: false
+}
+
 const listProfessor = async () => {
     try{
      const response = await axiosInstance.get("/professor")
@@ -32,9 +36,16 @@ const getItemsProfessor = async () => items;
     
     try {
       const response = await axiosInstance.post("/professor", newProfessor);
+      if(response.status === 200 || response.status === 201){
+        apiState.success = true;
+        await listProfessor();
+        return response.data;
+      } else {
+        apiState.success = false
+      }
       await listProfessor();
-      return response.data;
     } catch (error) {
+        apiState.success = false;
         console.log(error);
     }
   }
@@ -42,21 +53,35 @@ const getItemsProfessor = async () => items;
 const updateProfessor = async (teacher) => {
     try{
         const response = await axiosInstance.put(`/professor/${teacher.id}`, teacher);
-        await listProfessor();
-        return response.data;
-    }catch(error){
-        console.log(error);
-    }
+        if(response.status === 200 || response.status === 201){
+            apiState.success = true;
+            await listProfessor();
+            return response.data;
+          } else {
+            apiState.success = false
+          }
+          await listProfessor();
+        } catch (error) {
+            apiState.success = false;
+            console.log(error);
+        }
 }
 
 const deleteProfessor = async (id) => {
     try{
         const response = await axiosInstance.delete(`/professor/${id}`);
-        await listProfessor();
-        return response.data;
-    }catch(error){
-        console.error("Erro ao excluir professor:", error.response ? error.response.data : error.message);
-    }
+        if(response.status === 200 || response.status === 201){
+            apiState.success = true;
+            await listProfessor();
+            return response.data;
+          } else {
+            apiState.success = false
+          }
+          await listProfessor();
+        } catch (error) {
+            apiState.success = false;
+            console.log(error);
+        }
 }
 
 export { listProfessor, getItemsProfessor, addProfessor, updateProfessor, deleteProfessor }

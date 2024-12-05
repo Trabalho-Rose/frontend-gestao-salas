@@ -8,6 +8,11 @@ const axiosInstance = axios.create({
 
 let items = [];
 
+//let success = false;
+export const apiState = {
+  success: false
+}
+
 const listCurso = async () => {
     try{
       const response = await axiosInstance.get("/curso");
@@ -32,9 +37,16 @@ const addCurso = async (newCourse) => {
 
   try{
     const response = await axiosInstance.post("/curso", newCourse);
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listCurso();
+      return response.data;
+    } else {
+      apiState.success = false;
+    }
     await listCurso();
-    return response.data;
-  } catch (error) {
+  } catch(error){
+    apiState.success = false;
     console.log(error);
   }
 }
@@ -42,18 +54,16 @@ const addCurso = async (newCourse) => {
 const updateCurso = async (course) => {
   try{
     const response = await axiosInstance.put(`/curso/${course.id}`, course);
-    console.log(response.data);
-    if(response.data === 200){
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listCurso();
       return response.data;
     } else {
-      throw new Error('Erro ao atualizar curso')
+      apiState.success = false;
     }
-    
     await listCurso();
-    console.log(items);
-    
-    return response.data;
-  }catch(error){
+  } catch(error){
+    apiState.success = false;
     console.log(error);
   }
 }
@@ -61,11 +71,17 @@ const updateCurso = async (course) => {
 const deleteCurso = async (id) => {
   try{
     const response = await axiosInstance.delete(`/curso/${id}`);
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listCurso();
+      return response.data;
+    } else {
+      apiState.success = false;
+    }
     await listCurso();
-    return response.data;
-  }catch(error){
-    console.log("Erro ao excluir curso: ", error);
-    
+  } catch(error){
+    apiState.success = false;
+    console.log(error);
   }
 }
 

@@ -8,6 +8,10 @@ const axiosInstance = axios.create({
 
 let items = [];
 
+export const apiState = {
+  success: false
+}
+
 const listSalas = async () => {
   try{
     const response = await axiosInstance.get("/sala");
@@ -36,9 +40,16 @@ const addSala = async (newSala) => {
 
   try {
     const response = await axiosInstance.post('/sala', newSala);
-    await listSalas();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSalas();
+      return response.data;
+    } else {
+      apiState.success = false
+    }
+    
   } catch (error) {
+    apiState.success = false
     console.log(error);
   }
 }
@@ -46,9 +57,15 @@ const addSala = async (newSala) => {
 const updateSala = async (sala) => {
   try {
     const response = await axiosInstance.put(`/sala/${sala.id}`, sala);
-    await listSalas();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSalas();
+      return response.data;
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false
     console.log(error);
   }
 }
@@ -56,9 +73,15 @@ const updateSala = async (sala) => {
 const deleteSala = async (id) => {
   try {
     const response = await axiosInstance.delete(`/sala/${id}`);
-    await listSalas();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSalas();
+      return response.data;
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false
     console.log(error);
   }
 }
@@ -66,9 +89,15 @@ const deleteSala = async (id) => {
 const vincularTurma = async (salaId, turmaId) => {
   try {
     const response = await axiosInstance.post(`/sala/${salaId}/turma/${turmaId}`);
-    await listSalas();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listSalas();
+      return response.data;
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false
     console.log('Erro ao vicular turma', error);
   }
 }

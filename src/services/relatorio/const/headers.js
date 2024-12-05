@@ -1,5 +1,10 @@
 export const header = [
     {
+        title: 'Id',
+        sortable: true,
+        key: 'id'
+    },
+    {
         title: 'Curso',
         sortable: true,
         key: 'id_curso'

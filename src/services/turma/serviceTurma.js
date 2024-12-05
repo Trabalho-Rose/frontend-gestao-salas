@@ -8,6 +8,10 @@ const axiosInstance = axios.create({
 
 let items = [];
 
+export const apiState = {
+  success: false
+}
+
 const listTurmas = async () => {
   try {
     const response = await axiosInstance.get("/turma");
@@ -32,9 +36,15 @@ const addTurma = async (newTurma) => {
 
   try {
     const response = await axiosInstance.post('/turma', newTurma);
-    await listTurmas();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listTurmas();
+      return response.data;
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false
     console.log(error);
   }
 }
@@ -42,9 +52,15 @@ const addTurma = async (newTurma) => {
 const updateTurma = async (turma) => {
   try {
     const response = await axiosInstance.put(`/turma/${turma.id}`, turma);
-    await listTurmas();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listTurmas();
+      return response.data;
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false
     console.log(error);
   }
 }
@@ -52,9 +68,15 @@ const updateTurma = async (turma) => {
 const deleteTurma = async (id) => {
   try {
     const response = await axiosInstance.delete(`/turma/${id}`);
-    await listTurmas();
-    return response.data;
+    if(response.status === 200 || response.status === 201){
+      apiState.success = true;
+      await listTurmas();
+      return response.data;
+    } else {
+      apiState.success = false
+    }
   } catch (error) {
+    apiState.success = false
     console.log(error);
   }
 }

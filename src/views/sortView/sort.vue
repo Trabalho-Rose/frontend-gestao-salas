@@ -1,5 +1,11 @@
 <template>
   <v-row>
+    <v-snackbar
+        v-model="showSnackbar"
+        :color="snackBarColor"
+      >
+        {{ text }}
+      </v-snackbar>
     <v-col>
       <v-card max-width="700px" class="ma-10">
         <v-card-title>Definição da organização de salas diárias</v-card-title>
@@ -205,6 +211,9 @@ import { getItemsTurma } from "../../services/turma/serviceTurma";
 
 import { header } from '../../services/relatorio/const/headers'
 import { getItemsSorteio, addSorteio, updateSorteio, deleteSorteio, deleteAllSorteio } from '../../services/relatorio/relatorio'
+import {EventBus, ACTIONS} from '../../global/eventBus';
+import {showSnackbar} from '../../global/index'
+import {apiState} from '../../services/relatorio/relatorio'
  
 export default {
   data() {
@@ -230,6 +239,9 @@ export default {
       deleteDialog: false,
       saveIdToDelete: null,
       deleteAllDialog: false,
+      showSnackbar: false,
+      text: '',
+      snackBarColor: 'success'
     };
   },
 
@@ -312,11 +324,37 @@ export default {
         const newChoices = {
           id: this.nextId++,
           ...this.currentSelection
-        };
-        await addSorteio(newChoices);
-        this.allItems = await getItemsSorteio();
+        }
 
-        this.limparSelecoes();
+        try{
+          console.log('a salvar',newChoices);
+          
+          await addSorteio(newChoices);
+          console.log(apiState.success);
+          
+          if(apiState.success === true){
+            
+            this.snackBarColor = 'success';
+            this.text = 'Item cadastrado com sucesso!'
+            this.showSnackbar = true;
+            this.allItems = await getItemsSorteio();
+            setTimeout(() => {
+              this.showSnackbar = false
+            }, 2000)
+          } else {
+            this.snackBarColor = 'error'
+            this.text = 'Erro ao adicionar item.'
+            this.showSnackbar = true;
+            setTimeout(() => {
+              this.showSnackbar = false
+            }, 4000)
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          this.allItems = await getItemsSorteio();
+          this.limparSelecoes();
+        }
       }
     },
 
@@ -340,18 +378,39 @@ export default {
     //   this.allItems = await getItemsSorteio();
     // },
     
-    openDeleteDialog (id) {
-      this.saveIdToDelete = id;
+    openDeleteDialog (saveId) {
+      this.saveIdToDelete = saveId;
       this.deleteDialog = true
+      console.log('id salvo: ', this.saveIdToDelete);
+      console.log('idid', saveId);
+      
+      
     },
 
     async deleteOne() {
       try{
         this.deleteDialog = false;
         await deleteSorteio(this.saveIdToDelete);
-        this.allItems = await getItemsSorteio();
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Item removido com sucesso!'
+          this.showSnackbar = true;
+          this.allItems = await getItemsSorteio();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error'
+          this.text = 'Erro ao deletar item'
+          this.showSnackbar = true
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
       } catch (error) {
         console.log('Erro ao deletar item: ', error); 
+      } finally {
+        this.allItems = await getItemsSorteio();
       }
     },
 
@@ -363,9 +422,26 @@ export default {
       try{
         this.deleteAllDialog = false;
         await deleteAllSorteio();
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Itens removidos com sucesso!'
+          this.showSnackbar = true;
+          this.allItems = await getItemsSorteio();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error'
+          this.text = 'Erro ao deletar itens'
+          this.showSnackbar = true
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
       } catch (error) {
         console.log('Erro ao excluir todos registros: ', error);
-        
+      } finally {
+        this.allItems = await getItemsSorteio();
       }
     }
   }

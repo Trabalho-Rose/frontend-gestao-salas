@@ -1,5 +1,11 @@
 <template>
   <div>
+    <v-snackbar
+        v-model="showSnackbar"
+        :color="snackBarColor"
+      >
+        {{ text }}
+      </v-snackbar>
     <v-data-table
       class="data-table-header"
       dense
@@ -118,8 +124,10 @@ import {
   addTurma,
   updateTurma,
   deleteTurma,
+  apiState
 } from "../../services/turma/serviceTurma";
 import { header } from "../../services/turma/const/headers";
+import { showSnackbar } from "../../global";
 
 export default {
   data() {
@@ -132,6 +140,9 @@ export default {
       updateDialog: false,
       deleteDialog: false,
       saveIdTurma: null,
+      showSnackbar: false,
+      text: '',
+      snackBarColor: 'success'
     };
   },
 
@@ -148,9 +159,31 @@ export default {
 
     async saveNewTurma() {
       //this.turma = {};
-      await addTurma(this.turma);
-      this.addDialog = false;
-      this.items = await getItemsTurma();
+      try {
+        await addTurma(this.turma);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Turma adicionada com sucesso!'
+          this.showSnackbar = true;
+          this.items = await getItemsTurma();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao adicionar nova turma.'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+        
+      } finally {
+        this.addDialog = false;
+        this.items = await getItemsTurma();
+      }
     },
 
     updateTurma(item) {
@@ -159,9 +192,30 @@ export default {
     },
 
     async update() {
-      await updateTurma(this.turma);
-      this.updateDialog = false;
-      this.items = await getItemsTurma();
+      try {
+        await updateTurma(this.turma);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Turma atualizada com sucesso!'
+          this.showSnackbar = true;
+          this.items = await getItemsTurma();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao atualizar nova turma.'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.updateDialog = false;
+        this.items = await getItemsTurma();
+      }
     },
 
     openDeleteDialog(turmaId) {
@@ -170,9 +224,30 @@ export default {
     },
 
     async deleteOne() {
-      this.deleteDialog = false;
-      await deleteTurma(this.saveIdTurma);
-      this.items = await getItemsTurma();
+      try {
+        this.deleteDialog = false;
+        await deleteTurma(this.saveIdTurma);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Turma removida com sucesso!'
+          this.showSnackbar = true;
+          this.items = await getItemsTurma();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao remover turma.'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.items = await getItemsTurma();
+      }
     },
   },
 };

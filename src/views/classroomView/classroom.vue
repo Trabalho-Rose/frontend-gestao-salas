@@ -1,5 +1,11 @@
 <template>
   <div>
+    <v-snackbar
+        v-model="showSnackbar"
+        :color="snackBarColor"
+      >
+        {{ text }}
+      </v-snackbar>
     <v-data-table
       class="data-table-header ma-5 border-md rounded-lg "
       dense
@@ -122,16 +128,16 @@ import {
   addSala,
   updateSala,
   deleteSala,
+  apiState
 } from "../../services/sala/serviceSala";
 import { header } from "../../services/sala/const/headers";
-
-
+import {EventBus, ACTIONS} from '../../global/eventBus'
+import {showSnackbar} from '../../global/index'
 
 export default {
 
   data() {
     return {
-      
       items: [],
       header,
       search: "",
@@ -140,6 +146,9 @@ export default {
       updateDialog: false,
       deleteDialog: false,
       saveIdSala: null,
+      showSnackbar: false,
+      text: '',
+      snackBarColor: 'success'
     };
   },
   async mounted() {
@@ -154,9 +163,32 @@ export default {
     },
 
     async saveNewSala() {
-      await addSala(this.sala);
-      this.addDialog = false;
-      this.items = await getItemsSala();
+      try {
+        await addSala(this.sala);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Sala adicionada com sucesso!'
+          this.showSnackbar = true;
+          this.items = await getItemsSala();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao adicionar sala.'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.addDialog = false;
+        this.items = await getItemsSala();
+      }
+      
+     
     },
 
     updateSala(item) {
@@ -165,10 +197,32 @@ export default {
     },
 
     async update() {
-      await updateSala(this.sala);
-      this.updateDialog = false;
-      this.items = await getItemsSala();
-      
+      try {
+        await updateSala(this.sala);
+        if(apiState.success === true){
+          console.log(apiState.success);
+          
+          this.snackBarColor = 'success';
+          this.text = 'Sala atualizada com sucesso!'
+          this.showSnackbar = true;
+          this.items = await getItemsSala();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao atualizar sala.'
+          showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.updateDialog = false;
+        this.items = await getItemsSala();
+      }
     },
 
     openDeleteDialog(salaId) {
@@ -177,9 +231,31 @@ export default {
     },
 
     async deleteOne(id) {
-      this.deleteDialog = false;
-      await deleteSala(this.saveIdSala);
-      this.items = await getItemsSala();
+      try {
+        this.deleteDialog = false;
+        await deleteSala(this.saveIdSala);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Sala removida com sucesso!'
+          this.showSnackbar = true;
+          this.items = await getItemsSala();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000)
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao remover sala.'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+        
+      } finally {
+        this.items = await getItemsSala();
+      }
     },
   },
 };

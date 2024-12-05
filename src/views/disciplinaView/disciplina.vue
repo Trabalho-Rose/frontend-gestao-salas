@@ -1,5 +1,11 @@
 <template>
   <div>
+    <v-snackbar
+        v-model="showSnackbar"
+        :color="snackBarColor"
+      >
+        {{ text }}
+      </v-snackbar>
     <v-data-table
       class="data-table-header"
       dense
@@ -120,8 +126,11 @@ import {
   addDisciplina,
   updateDisciplina,
   deleteDisciplina,
+  apiState
 } from "../../services/disciplina/serviceDisciplina";
 import { header } from "../../services/disciplina/const/headers";
+import { EventBus, ACTIONS } from '../../global/eventBus';
+import { showSnackbar } from '../../global/index'
 
 export default {
   data() {
@@ -134,6 +143,9 @@ export default {
       updateDialog: false,
       deleteDialog: false,
       saveIdDisciplina: null,
+      showSnackbar: false,
+      text: '',
+      snackBarColor: 'success'
     };
   },
 
@@ -149,10 +161,30 @@ export default {
     },
 
     async saveNewDisciplina() {
-      //this.disciplina = {};
-      await addDisciplina(this.disciplina);
-      this.addDialog = false;
-      this.items = await getItemsDisciplina();
+      try {
+        await addDisciplina(this.disciplina);
+        if(apiState.success === true){
+          this.snackBarColor = 'success';
+          this.text = 'Disciplina adicionada com sucesso!';
+          showSnackbar = true;
+          this.items = await getItemsDisciplina();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000);
+        } else {
+          this.snackBarColor = 'error';
+          this.text = 'Erro ao adicionar item'
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.addDialog = false;
+        this.items = await getItemsDisciplina();
+      }
     },
 
     updateDisciplina(item) {
@@ -161,9 +193,30 @@ export default {
     },
 
     async update() {
-      await updateDisciplina(this.disciplina);
-      this.updateDialog = false;
-      this.items = await getItemsDisciplina();
+      try {
+        await updateDisciplina(this.disciplina);
+        if (apiState.success === true) {
+          this.snackBarColor = 'success';
+          this.text = 'Disciplina atualizada com sucesso!';
+          this.items = await getItemsDisciplina();
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000);
+        }else {
+          this.snackBarColor = 'error';
+          this.text = `Erro ao atualizar item`;
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.updateDialog = false;
+        this.items = await getItemsDisciplina();
+      }
     },
 
     OpendeleteDialog(disciplinaId) {
@@ -172,9 +225,30 @@ export default {
     },
 
     async deleteOne() {
-      this.deleteDialog = false;
-      await deleteDisciplina(this.saveIdDisciplina);
-      this.items = await getItemsDisciplina();
+      try {
+        this.deleteDialog = false;
+        await deleteDisciplina(this.saveIdDisciplina);
+        if (apiState.success === true) {
+          this.snackBarColor = 'success';
+          this.text = 'Disciplina removida com sucesso!';
+          this.showSnackbar = true;
+          this.items = await getItemsDisciplina();
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 2000);
+        }else {
+          this.snackBarColor = 'error';
+          this.text = `Erro ao remover item.`;
+          this.showSnackbar = true;
+          setTimeout(() => {
+            this.showSnackbar = false
+          }, 4000);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.items = await getItemsDisciplina();
+      }
     },
   },
 };
